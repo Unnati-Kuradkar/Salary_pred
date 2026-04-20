@@ -1,35 +1,50 @@
 import os
-import pickle
 import streamlit as st
 import numpy as np
 
-# --- Load model safely ---
+# Try both loaders
+import joblib
+import pickle
+
+# --- Setup path ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 model_path = os.path.join(BASE_DIR, "linear_regression_model.pkl")
 
-# Debug (optional - remove later)
-# st.write("Model path:", model_path)
-# st.write("Exists:", os.path.exists(model_path))
+# --- Load model safely ---
+model = None
 
+if not os.path.exists(model_path):
+    st.error("❌ Model file not found. Place 'linear_regression_model.pkl' in the same folder as app.py")
+    st.stop()
+
+# Try joblib first
 try:
-    with open(model_path, "rb") as f:
-        model = pickle.load(f)
-except FileNotFoundError:
-    st.error("❌ Model file not found. Make sure 'linear_regression_model.pkl' is in the same folder.")
-    st.stop()
-except Exception as e:
-    st.error(f"❌ Error loading model: {e}")
-    st.stop()
+    model = joblib.load(model_path)
+except Exception:
+    try:
+        with open(model_path, "rb") as f:
+            model = pickle.load(f)
+    except Exception as e:
+        st.error("❌ Failed to load model.")
+        st.error(f"Details: {e}")
+        st.info("👉 Fix: Re-save the model using the SAME Python & sklearn version, or use joblib.")
+        st.stop()
 
 # --- UI ---
+st.set_page_config(page_title="Salary Predictor", page_icon="💼")
+
 st.title("💼 Salary Prediction App")
+st.write("Enter your details below:")
 
-st.write("Enter details to predict salary")
+# --- Inputs (adjust if your model uses more features) ---
+experience = st.number_input(
+    "Years of Experience",
+    min_value=0.0,
+    max_value=50.0,
+    step=0.5
+)
 
-# Example input (modify based on your model)
-experience = st.number_input("Years of Experience", min_value=0.0, max_value=50.0, step=0.5)
-
-# --- Prediction ---
+# --- Predict ---
 if st.button("Predict Salary"):
     try:
         input_data = np.array([[experience]])
@@ -37,4 +52,5 @@ if st.button("Predict Salary"):
 
         st.success(f"💰 Predicted Salary: {prediction[0]:,.2f}")
     except Exception as e:
-        st.error(f"Prediction failed: {e}")
+        st.error("❌ Prediction failed")
+        st.error(f"Details: {e}")
