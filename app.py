@@ -27,7 +27,7 @@ for column in df.columns:
 
 df = pd.get_dummies(df, drop_first=True)
 
-display(df.head())
+print(df.head())
 
 # Separate features (X) and target (y)
 X = df.drop('Salary', axis=1)
