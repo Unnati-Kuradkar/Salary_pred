@@ -9,7 +9,7 @@ Original file is located at
 
 import pandas as pd
 
-df = pd.read_csv("/content/Salary_Dataset_DataScienceLovers.csv")
+df = pd.read_csv("https://raw.githubusercontent.com/Sakshi100304/salary_pred/refs/heads/main/Salary_Dataset_DataScienceLovers.csv")
 df
 
 df.isnull().sum()
