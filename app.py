@@ -34,10 +34,10 @@ X = df.drop('Salary', axis=1)
 y = df['Salary']
 
 print('Features (X) head:')
-display(X.head())
+print(X.head())
 
 print('\nTarget (y) head:')
-display(y.head())
+print(y.head())
 
 from sklearn.model_selection import train_test_split
 
