@@ -23,13 +23,7 @@ for column in df.columns:
     df[column] = df[column].fillna(df[column].mean())
     print(df.isnull().sum())
 
-from sklearn.preprocessing import LabelEncoder
-
-label_encoder = LabelEncoder()
-
-for column in df.columns:
-    if df[column].dtype == 'object':
-        df[column] = label_encoder.fit_transform(df[column])
+df = pd.get_dummies(df, drop_first=True)
 
 display(df.head())
 
@@ -57,7 +51,7 @@ from sklearn.neighbors import KNeighborsRegressor
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.naive_bayes import GaussianNB
+
 
 # Initialize all models in a dictionary
 models_to_train = {
@@ -66,7 +60,7 @@ models_to_train = {
     'Support Vector Machine': SVR(),
     'Decision Tree': DecisionTreeRegressor(random_state=42),
     'Random Forest': RandomForestRegressor(n_estimators=100, random_state=42),
-    'Naive Bayes': GaussianNB() # Still noting this is a classifier applied to regression
+   
 }
 
 y_preds_dict = {}
