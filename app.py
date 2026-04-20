@@ -11,6 +11,8 @@ import pandas as pd
 
 df = pd.read_csv("https://raw.githubusercontent.com/Sakshi100304/salary_pred/refs/heads/main/Salary_Dataset_DataScienceLovers.csv")
 df
+for column in df.columns:
+    df[column] = pd.to_numeric(df[column], errors='ignore')
 
 df.isnull().sum()
 
